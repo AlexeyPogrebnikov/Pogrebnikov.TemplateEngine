@@ -1,5 +1,5 @@
-.vs/
-Pogrebnikov.TemplateEngine/bin/
-Pogrebnikov.TemplateEngine/obj/
-Pogrebnikov.TemplateEngine.Tests/bin/
-Pogrebnikov.TemplateEngine.Tests/obj/
+src/.vs/
+src/Pogrebnikov.TemplateEngine/bin/
+src/Pogrebnikov.TemplateEngine/obj/
+src/Pogrebnikov.TemplateEngine.Tests/bin/
+src/Pogrebnikov.TemplateEngine.Tests/obj/
