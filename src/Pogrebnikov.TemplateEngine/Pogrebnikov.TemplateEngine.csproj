@@ -42,7 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LexicalAnalysis\Token.cs" />
+    <Compile Include="LexicalAnalysis\TokenizationException.cs" />
+    <Compile Include="LexicalAnalysis\Tokenizer.cs" />
+    <Compile Include="LexicalAnalysis\TokenType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

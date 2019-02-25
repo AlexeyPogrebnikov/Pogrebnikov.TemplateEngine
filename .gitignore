@@ -1,5 +1,10 @@
 src/.vs/
+src/packages/
+
 src/Pogrebnikov.TemplateEngine/bin/
 src/Pogrebnikov.TemplateEngine/obj/
+src/Pogrebnikov.TemplateEngine/Pogrebnikov.TemplateEngine.csproj.user
+
 src/Pogrebnikov.TemplateEngine.Tests/bin/
 src/Pogrebnikov.TemplateEngine.Tests/obj/
+src/Pogrebnikov.TemplateEngine.Tests/Pogrebnikov.TemplateEngine.Tests.csproj.user
