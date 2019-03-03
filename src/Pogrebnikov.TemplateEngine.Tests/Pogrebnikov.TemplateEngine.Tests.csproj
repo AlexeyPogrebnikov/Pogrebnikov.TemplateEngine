@@ -48,6 +48,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LexicalAnalysis\TokenizerTests.cs" />
+    <Compile Include="Parsing\ParserTests.cs" />
+    <Compile Include="Parsing\TemplateModelBuilderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
