@@ -17,7 +17,6 @@ namespace Pogrebnikov.TemplateEngine.Parsing.States
 			if (token.TokenType == TokenType.Identifier)
 			{
 				var property = new Property { Name = token.Content };
-
 				_builder.AddPropertyElement(property);
 				return new IdentifierState();
 			}

@@ -8,7 +8,7 @@ namespace Pogrebnikov.TemplateEngine.Parsing
 	[Serializable]
 	internal class ParsingException : Exception
 	{
-		internal ParsingException(IState state, Token token) : base($"Unexpected token for state: '{state.GetType().Name}'. TokenType: '{token.TokenType}' Content: '{token.Content}'")
+		internal ParsingException(IState state, Token token) : base(ConstructMessage(state, token))
 		{
 		}
 
@@ -16,6 +16,15 @@ namespace Pogrebnikov.TemplateEngine.Parsing
 			SerializationInfo info,
 			StreamingContext context) : base(info, context)
 		{
+		}
+
+		private static string ConstructMessage(IState state, Token token)
+		{
+			string content = token.Content;
+			if (content != null && content.Length > 100)
+				content = token.Content.Substring(0, 100) + "...";
+
+			return $"Unexpected token '{token.TokenType}' with content '{content}' in state '{state.GetType().Name}'.";
 		}
 	}
 }
