@@ -28,7 +28,7 @@ namespace Pogrebnikov.TemplateEngine.Tests.Parsing
 		}
 
 		[Test]
-		public void Parse_return_CallGraphTemplateElement_for_property_in_template()
+		public void Parse_return_OutputValueTemplateElement_for_property_in_template()
 		{
 			TemplateModel templateModel = _parser.Parse("{{ Name }}");
 
@@ -48,7 +48,7 @@ namespace Pogrebnikov.TemplateEngine.Tests.Parsing
 		}
 
 		[Test]
-		public void Parse_return_TextTemplateElement_PropertyTemplateElement()
+		public void Parse_return_TextTemplateElement_and_OutputValueTemplateElement()
 		{
 			TemplateModel templateModel = _parser.Parse("text{{ Count }}");
 
@@ -79,6 +79,22 @@ namespace Pogrebnikov.TemplateEngine.Tests.Parsing
 			ValueAccess nameValueAccess = modelValueAccess.Next;
 			Assert.AreEqual("Name", nameValueAccess.Name);
 			Assert.IsNull(nameValueAccess.Next);
+		}
+
+		[Test]
+		public void Parse_return_OutputValueTemplateElement_and_TextTemplateElement()
+		{
+			TemplateModel templateModel = _parser.Parse("{{ Param }}Sql");
+
+			TemplateElement[] elements = templateModel.Elements.ToArray();
+			Assert.AreEqual(2, elements.Length);
+
+			var outputValueTemplateElement = (OutputValueTemplateElement)elements[0];
+			Assert.AreEqual("Param", outputValueTemplateElement.ValueAccess.Name);
+			Assert.IsNull(outputValueTemplateElement.ValueAccess.Next);
+
+			var templateElement = (TextTemplateElement) elements[1];
+			Assert.AreEqual("Sql", templateElement.Text);
 		}
 	}
 }

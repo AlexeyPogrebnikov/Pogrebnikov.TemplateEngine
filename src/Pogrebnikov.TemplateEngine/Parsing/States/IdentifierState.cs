@@ -19,7 +19,7 @@ namespace Pogrebnikov.TemplateEngine.Parsing.States
 			if (token.TokenType == TokenType.CloseTemplate)
 			{
 				_builder.AddOutputValueElement(_beginValueAccess);
-				return new CloseTemplateState();
+				return new CloseTemplateState(_builder);
 			}
 
 			if (token.TokenType == TokenType.Dot)
