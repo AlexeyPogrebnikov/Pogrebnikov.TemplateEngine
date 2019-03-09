@@ -34,9 +34,9 @@ namespace Pogrebnikov.TemplateEngine.Tests.Parsing
 
 			TemplateElement[] elements = templateModel.Elements.ToArray();
 			Assert.AreEqual(1, elements.Length);
-			var element = (PropertyTemplateElement) elements[0];
-			Property property = element.Property;
-			Assert.AreEqual("Name", property.Name);
+			var element = (OutputValueTemplateElement) elements[0];
+			ValueAccess valueAccess = element.ValueAccess;
+			Assert.AreEqual("Name", valueAccess.Name);
 		}
 
 		[Test]
@@ -55,12 +55,30 @@ namespace Pogrebnikov.TemplateEngine.Tests.Parsing
 			TemplateElement[] elements = templateModel.Elements.ToArray();
 			Assert.AreEqual(2, elements.Length);
 
-			var textTemplateElement = (TextTemplateElement)elements[0];
+			var textTemplateElement = (TextTemplateElement) elements[0];
 			Assert.AreEqual("text", textTemplateElement.Text);
 
-			var propertyTemplateElement = (PropertyTemplateElement)elements[1];
-			var property = propertyTemplateElement.Property;
-			Assert.AreEqual("Count", property.Name);
+			var outputValueTemplateElement = (OutputValueTemplateElement) elements[1];
+			ValueAccess valueAccess = outputValueTemplateElement.ValueAccess;
+			Assert.AreEqual("Count", valueAccess.Name);
+			Assert.IsNull(valueAccess.Next);
+		}
+
+		[Test]
+		public void Parse_return_OutputValueTemplateElement_for_property_dot_property()
+		{
+			TemplateModel templateModel = _parser.Parse("{{ Model.Name }}");
+
+			TemplateElement[] elements = templateModel.Elements.ToArray();
+			Assert.AreEqual(1, elements.Length);
+			var element = (OutputValueTemplateElement) elements[0];
+
+			ValueAccess modelValueAccess = element.ValueAccess;
+			Assert.AreEqual("Model", modelValueAccess.Name);
+
+			ValueAccess nameValueAccess = modelValueAccess.Next;
+			Assert.AreEqual("Name", nameValueAccess.Name);
+			Assert.IsNull(nameValueAccess.Next);
 		}
 	}
 }

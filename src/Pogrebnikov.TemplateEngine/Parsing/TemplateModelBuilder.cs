@@ -15,11 +15,11 @@ namespace Pogrebnikov.TemplateEngine.Parsing
 			});
 		}
 
-		internal void AddPropertyElement(Property property)
+		internal void AddOutputValueElement(ValueAccess valueAccess)
 		{
-			_elements.Add(new PropertyTemplateElement
+			_elements.Add(new OutputValueTemplateElement
 			{
-				Property = property
+				ValueAccess = valueAccess
 			});
 		}
 

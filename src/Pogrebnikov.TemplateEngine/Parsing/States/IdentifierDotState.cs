@@ -3,12 +3,14 @@ using Pogrebnikov.TemplateEngine.Parsing.Elements;
 
 namespace Pogrebnikov.TemplateEngine.Parsing.States
 {
-	internal class OpenTemplateState : IState
+	internal class IdentifierDotState : IState
 	{
+		private readonly ValueAccess _valueAccess;
 		private readonly TemplateModelBuilder _builder;
 
-		internal OpenTemplateState(TemplateModelBuilder builder)
+		public IdentifierDotState(ValueAccess valueAccess, TemplateModelBuilder builder)
 		{
+			_valueAccess = valueAccess;
 			_builder = builder;
 		}
 
@@ -16,8 +18,9 @@ namespace Pogrebnikov.TemplateEngine.Parsing.States
 		{
 			if (token.TokenType == TokenType.Identifier)
 			{
-				var valueAccess = new PropertyValueAccess { Name = token.Content };
-				return new IdentifierState(valueAccess, _builder);
+				var endValueAccess = new PropertyValueAccess { Name = token.Content };
+				_valueAccess.Append(endValueAccess);
+				return new IdentifierState(_valueAccess, _builder);
 			}
 
 			throw new ParsingException(this, token);

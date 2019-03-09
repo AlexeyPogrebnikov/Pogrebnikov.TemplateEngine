@@ -30,18 +30,18 @@ namespace Pogrebnikov.TemplateEngine.Tests.Parsing
 		}
 
 		[Test]
-		public void AddPropertyElement_GetResult_templateModel_contains_PropertyTemplateElement()
+		public void AddOutputValueElement_GetResult_templateModel_contains_PropertyTemplateElement()
 		{
-			var property = new Property { Name = "Count" };
+			var property = new PropertyValueAccess { Name = "Count" };
 
-			_builder.AddPropertyElement(property);
+			_builder.AddOutputValueElement(property);
 
 			TemplateModel templateModel = _builder.GetResult();
 
 			TemplateElement[] elements = templateModel.Elements.ToArray();
 			Assert.AreEqual(1, elements.Length);
-			var element = (PropertyTemplateElement) elements[0];
-			Assert.AreEqual("Count", element.Property.Name);
+			var element = (OutputValueTemplateElement) elements[0];
+			Assert.AreEqual("Count", element.ValueAccess.Name);
 		}
 	}
 }
