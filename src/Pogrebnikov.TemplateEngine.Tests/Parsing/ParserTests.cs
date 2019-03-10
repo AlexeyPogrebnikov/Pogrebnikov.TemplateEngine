@@ -89,7 +89,7 @@ namespace Pogrebnikov.TemplateEngine.Tests.Parsing
 			TemplateElement[] elements = templateModel.Elements.ToArray();
 			Assert.AreEqual(2, elements.Length);
 
-			var outputValueTemplateElement = (OutputValueTemplateElement)elements[0];
+			var outputValueTemplateElement = (OutputValueTemplateElement) elements[0];
 			Assert.AreEqual("Param", outputValueTemplateElement.ValueAccess.Name);
 			Assert.IsNull(outputValueTemplateElement.ValueAccess.Next);
 

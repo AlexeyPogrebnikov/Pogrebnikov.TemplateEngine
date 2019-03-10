@@ -1,5 +1,4 @@
-﻿using System;
-using Pogrebnikov.TemplateEngine.Evaluating;
+﻿using Pogrebnikov.TemplateEngine.Evaluating;
 
 namespace Pogrebnikov.TemplateEngine.Parsing.Elements
 {
@@ -9,7 +8,7 @@ namespace Pogrebnikov.TemplateEngine.Parsing.Elements
 
 		internal override void Accept(TemplateEvaluator evaluator)
 		{
-			throw new NotImplementedException();
+			evaluator.EvalText(this);
 		}
 	}
 }
