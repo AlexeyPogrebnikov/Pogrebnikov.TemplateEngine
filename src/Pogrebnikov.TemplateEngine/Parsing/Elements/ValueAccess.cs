@@ -6,8 +6,6 @@
 
 		internal ValueAccess Next { get; set; }
 
-		internal abstract object GetValue(PropertyBag propertyBag);
-
 		internal void Append(ValueAccess valueAccess)
 		{
 			if (Next == null)

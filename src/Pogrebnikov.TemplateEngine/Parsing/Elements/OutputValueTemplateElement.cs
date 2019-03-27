@@ -9,7 +9,7 @@ namespace Pogrebnikov.TemplateEngine.Parsing.Elements
 
 		internal override void Accept(TemplateEvaluator evaluator)
 		{
-			throw new NotImplementedException();
+			evaluator.EvalOutputValue(this);
 		}
 	}
 }

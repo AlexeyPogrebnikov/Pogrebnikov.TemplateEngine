@@ -1,12 +1,19 @@
-﻿namespace Pogrebnikov.TemplateEngine
+﻿using Pogrebnikov.TemplateEngine.Parsing.Elements;
+
+namespace Pogrebnikov.TemplateEngine
 {
 	public class Model
 	{
-		public Model(PropertyBag bag)
+		private readonly object _obj;
+
+		public Model(object obj)
 		{
-			Bag = bag;
+			_obj = obj;
 		}
 
-		public PropertyBag Bag { get; }
+		internal object GetValue(ValueAccess valueAccess)
+		{
+			return _obj.GetType().GetProperty(valueAccess.Name).GetValue(_obj);
+		}
 	}
 }

@@ -12,7 +12,7 @@ namespace Pogrebnikov.TemplateEngine
 
 			TemplateModel templateModel = parser.Parse(template);
 
-			var evaluator = new TemplateEvaluator();
+			var evaluator = new TemplateEvaluator(model);
 
 			foreach (TemplateElement element in templateModel.Elements)
 				element.Accept(evaluator);

@@ -50,6 +50,7 @@
     <Compile Include="EngineTests.cs" />
     <Compile Include="Evaluating\TemplateEvaluatorTests.cs" />
     <Compile Include="LexicalAnalysis\TokenizerTests.cs" />
+    <Compile Include="ModelTests.cs" />
     <Compile Include="Parsing\Elements\PropertyValueAccessTests.cs" />
     <Compile Include="Parsing\ParserTests.cs" />
     <Compile Include="Parsing\TemplateModelBuilderTests.cs" />
