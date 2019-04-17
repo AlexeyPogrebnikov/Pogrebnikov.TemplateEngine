@@ -29,5 +29,23 @@ namespace Pogrebnikov.TemplateEngine.Tests
 
 			Assert.AreEqual("10", eval);
 		}
+
+		[Test]
+		public void Eval_complex_property()
+		{
+			var obj = new
+			{
+				Language = new
+				{
+					Name = "C#"
+				}
+			};
+
+			var model = new Model(obj);
+
+			string eval = Engine.Eval("{{ Language.Name }}", model);
+
+			Assert.AreEqual("C#", eval);
+		}
 	}
 }

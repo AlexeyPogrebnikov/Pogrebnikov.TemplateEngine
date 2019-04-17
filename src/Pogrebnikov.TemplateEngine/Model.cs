@@ -13,7 +13,16 @@ namespace Pogrebnikov.TemplateEngine
 
 		internal object GetValue(ValueAccess valueAccess)
 		{
-			return _obj.GetType().GetProperty(valueAccess.Name).GetValue(_obj);
+			ValueAccess currentValueAccess = valueAccess;
+			object currentObject = _obj;
+
+			do
+			{
+				currentObject = currentObject.GetType().GetProperty(currentValueAccess.Name).GetValue(currentObject);
+				currentValueAccess = currentValueAccess.Next;
+			} while (currentValueAccess != null);
+
+			return currentObject;
 		}
 	}
 }
