@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NUnit.Framework;
 using Pogrebnikov.TemplateEngine.Parsing;
 using Pogrebnikov.TemplateEngine.Parsing.Elements;
@@ -44,7 +45,9 @@ namespace Pogrebnikov.TemplateEngine.Tests.Parsing
 		{
 			var exception = Assert.Throws<ParsingException>(() => _parser.Parse("{{."));
 
-			Assert.AreEqual("Unexpected token 'Dot' with content '.' in state 'OpenTemplateState'.", exception.Message);
+			string expected = "Unexpected token 'Dot' with content '.' in state 'OpenTemplateState'." + Environment.NewLine +
+			                  "Line number: 1, column: 3, position: 3.";
+			Assert.AreEqual(expected, exception.Message);
 		}
 
 		[Test]

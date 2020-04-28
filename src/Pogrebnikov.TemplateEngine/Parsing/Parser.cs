@@ -9,8 +9,8 @@ namespace Pogrebnikov.TemplateEngine.Parsing
 	{
 		internal TemplateModel Parse(string template)
 		{
-			var tokenizer = new Tokenizer();
-			IEnumerable<Token> tokens = tokenizer.Tokenize(template);
+			var tokenizer = new Tokenizer(template);
+			IEnumerable<Token> tokens = tokenizer.Tokenize();
 
 			var builder = new TemplateModelBuilder();
 			IState state = new InitialState(builder);

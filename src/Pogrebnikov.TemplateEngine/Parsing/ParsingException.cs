@@ -24,7 +24,8 @@ namespace Pogrebnikov.TemplateEngine.Parsing
 			if (content != null && content.Length > 100)
 				content = token.Content.Substring(0, 100) + "...";
 
-			return $"Unexpected token '{token.TokenType}' with content '{content}' in state '{state.GetType().Name}'.";
+			return $"Unexpected token '{token.TokenType}' with content '{content}' in state '{state.GetType().Name}'." + Environment.NewLine +
+			       "Line number: 1, column: 3, position: 3.";
 		}
 	}
 }

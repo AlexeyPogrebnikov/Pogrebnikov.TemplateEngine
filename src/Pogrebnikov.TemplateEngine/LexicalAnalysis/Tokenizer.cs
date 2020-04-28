@@ -5,6 +5,7 @@ namespace Pogrebnikov.TemplateEngine.LexicalAnalysis
 {
 	internal class Tokenizer
 	{
+		private const char LineFeedSymbol = '\n';
 		private const string OpenTemplateKeyword = "{{";
 		private const string CloseTemplateTokenContent = "}}";
 		private const string DotTokenContent = ".";
@@ -17,152 +18,207 @@ namespace Pogrebnikov.TemplateEngine.LexicalAnalysis
 		private const string EndIfTokenContent = "/if";
 		private const string LoopTokenContent = "#loop";
 		private const string EndLoopTokenContent = "/loop";
+		private readonly string _s;
+		private int _lineNumber = 1;
+		private int _columnNumber = 1;
+		private int _position;
+		private bool _isTemplate;
+		private IList<Token> _tokens;
 
-		internal IEnumerable<Token> Tokenize(string s)
+		internal Tokenizer(string s)
 		{
-			IList<Token> tokens = new List<Token>();
+			_s = s;
+		}
 
-			var isTemplate = false;
-			var position = 0;
+		internal IEnumerable<Token> Tokenize()
+		{
+			_tokens = new List<Token>();
 
-			while (position < s.Length)
+			while (_position < _s.Length)
 			{
-				if (isTemplate)
+				if (_isTemplate)
 				{
-					TokenizeIntoTemplateStatement(s, ref position, ref isTemplate, tokens);
+					TokenizeIntoTemplateStatement();
 					continue;
 				}
 
-				int indexOfOpenTemplateKeyword = s.IndexOf(OpenTemplateKeyword, position, StringComparison.Ordinal);
-				TokenizeOutsideTemplateStatement(s, indexOfOpenTemplateKeyword, ref position, tokens);
-				isTemplate = true;
+				TokenizeOutsideTemplateStatement();
+				_isTemplate = true;
 			}
 
-			tokens.Add(new Token
+			_tokens.Add(new Token
 			{
 				TokenType = TokenType.End,
-				Content = string.Empty
+				Content = string.Empty,
+				LineNumber = _lineNumber,
+				ColumnNumber = _columnNumber,
+				Position = _s.Length + 1
 			});
 
-			return tokens;
+			return _tokens;
 		}
 
-		private static void TokenizeOutsideTemplateStatement(string s, int indexOfOpenTemplateKeyword, ref int position, ICollection<Token> tokens)
+		private void TokenizeOutsideTemplateStatement()
 		{
-			if (indexOfOpenTemplateKeyword >= position)
+			int indexOfOpenTemplateKeyword = _s.IndexOf(OpenTemplateKeyword, _position, StringComparison.Ordinal);
+
+			if (indexOfOpenTemplateKeyword >= _position)
 			{
-				if (indexOfOpenTemplateKeyword > position)
+				if (indexOfOpenTemplateKeyword > _position)
 				{
-					tokens.Add(new Token
+					_tokens.Add(new Token
 					{
 						TokenType = TokenType.Text,
-						Content = s.Substring(position, indexOfOpenTemplateKeyword - position)
+						Content = _s.Substring(_position, indexOfOpenTemplateKeyword - _position),
+						LineNumber = 1,
+						ColumnNumber = _position + 1,
+						Position = _position + 1
 					});
 				}
 
-				tokens.Add(new Token
+				_columnNumber = indexOfOpenTemplateKeyword + 1;
+
+				_tokens.Add(new Token
 				{
 					TokenType = TokenType.OpenTemplate,
-					Content = OpenTemplateKeyword
+					Content = OpenTemplateKeyword,
+					LineNumber = 1,
+					ColumnNumber = _columnNumber,
+					Position = indexOfOpenTemplateKeyword + 1
 				});
 
-				position = indexOfOpenTemplateKeyword + OpenTemplateKeyword.Length;
+				_columnNumber += OpenTemplateKeyword.Length;
+
+				_position = indexOfOpenTemplateKeyword + OpenTemplateKeyword.Length;
 				return;
 			}
 
-			tokens.Add(new Token
+			string content = _s.Substring(_position);
+
+			_columnNumber = _position + 1;
+
+			_tokens.Add(new Token
 			{
 				TokenType = TokenType.Text,
-				Content = s.Substring(position)
+				Content = content,
+				LineNumber = _lineNumber,
+				ColumnNumber = _columnNumber,
+				Position = _position + 1
 			});
 
-			position = s.Length;
+			_columnNumber += content.Length;
+
+			int indexOfNewLine = content.IndexOf(LineFeedSymbol);
+			while (indexOfNewLine > -1)
+			{
+				_lineNumber++;
+				indexOfNewLine = content.IndexOf(LineFeedSymbol, indexOfNewLine + 1);
+				_columnNumber = 1;
+			}
+
+			_position = _s.Length;
 		}
 
-		private static void TokenizeIntoTemplateStatement(string s, ref int position, ref bool isTemplate, ICollection<Token> tokens)
+		private void TokenizeIntoTemplateStatement()
 		{
-			if (char.IsWhiteSpace(s[position]))
+			if (char.IsWhiteSpace(_s[_position]))
 			{
-				position++;
+				if (_s[_position] == LineFeedSymbol)
+				{
+					_lineNumber++;
+					_columnNumber = 1;
+				}
+
+				_columnNumber++;
+				_position++;
 				return;
 			}
 
-			Token token = TryTokenizeCloseTemplate(s, ref position);
+			Token token = TryTokenizeCloseTemplate();
 			if (token != null)
-				isTemplate = false;
+				_isTemplate = false;
 
-			token = token ?? TryTokenizeDot(s, ref position);
-			token = token ?? TryTokenizeComma(s, ref position);
-			token = token ?? TryTokenizeLeftParenthesis(s, ref position);
-			token = token ?? TryTokenizeRightParenthesis(s, ref position);
-			token = token ?? TryTokenizeLeftBracket(s, ref position);
-			token = token ?? TryTokenizeRightBracket(s, ref position);
-			token = token ?? TryTokenizeIf(s, ref position);
-			token = token ?? TryTokenizeEndIf(s, ref position);
-			token = token ?? TryTokenizeLoop(s, ref position);
-			token = token ?? TryTokenizeEndLoop(s, ref position);
-			token = token ?? TryTokenizeIdentifier(s, ref position);
+			token = token ?? TryTokenizeDot();
+			token = token ?? TryTokenizeComma();
+			token = token ?? TryTokenizeLeftParenthesis();
+			token = token ?? TryTokenizeRightParenthesis();
+			token = token ?? TryTokenizeLeftBracket();
+			token = token ?? TryTokenizeRightBracket();
+			token = token ?? TryTokenizeIf();
+			token = token ?? TryTokenizeEndIf();
+			token = token ?? TryTokenizeLoop();
+			token = token ?? TryTokenizeEndLoop();
+			token = token ?? TryTokenizeIdentifier();
 
 			if (token != null)
-				tokens.Add(token);
+				_tokens.Add(token);
 			else
-				throw new TokenizationException($"Can't tokenize '{s[position]}' at position {position + 1}.");
+				throw new TokenizationException($"Can't tokenize '{_s[_position]}' at position {_position + 1}.");
 		}
 
-		private static Token TryTokenizeDot(string s, ref int position)
+		private Token TryTokenizeDot()
 		{
-			return TryTokenize(s, DotTokenContent, ref position, TokenType.Dot);
+			return TryTokenize(DotTokenContent, TokenType.Dot);
 		}
 
-		private static Token TryTokenizeComma(string s, ref int position)
+		private Token TryTokenizeComma()
 		{
-			return TryTokenize(s, CommaTokenContent, ref position, TokenType.Comma);
+			return TryTokenize(CommaTokenContent, TokenType.Comma);
 		}
 
-		private static Token TryTokenizeLeftParenthesis(string s, ref int position)
+		private Token TryTokenizeLeftParenthesis()
 		{
-			return TryTokenize(s, LeftParenthesisTokenContent, ref position, TokenType.LeftParenthesis);
+			return TryTokenize(LeftParenthesisTokenContent, TokenType.LeftParenthesis);
 		}
 
-		private static Token TryTokenizeRightParenthesis(string s, ref int position)
+		private Token TryTokenizeRightParenthesis()
 		{
-			return TryTokenize(s, RightParenthesisTokenContent, ref position, TokenType.RightParenthesis);
+			return TryTokenize(RightParenthesisTokenContent, TokenType.RightParenthesis);
 		}
 
-		private static Token TryTokenizeLeftBracket(string s, ref int position)
+		private Token TryTokenizeLeftBracket()
 		{
-			return TryTokenize(s, LeftBracketTokenContent, ref position, TokenType.LeftBracket);
+			return TryTokenize(LeftBracketTokenContent, TokenType.LeftBracket);
 		}
 
-		private static Token TryTokenizeRightBracket(string s, ref int position)
+		private Token TryTokenizeRightBracket()
 		{
-			return TryTokenize(s, RightBracketTokenContent, ref position, TokenType.RightBracket);
+			return TryTokenize(RightBracketTokenContent, TokenType.RightBracket);
 		}
 
-		private static Token TryTokenizeCloseTemplate(string s, ref int position)
+		private Token TryTokenizeCloseTemplate()
 		{
-			return TryTokenize(s, CloseTemplateTokenContent, ref position, TokenType.CloseTemplate);
+			return TryTokenize(CloseTemplateTokenContent, TokenType.CloseTemplate);
 		}
 
-		private static Token TryTokenizeIdentifier(string s, ref int position)
+		private Token TryTokenizeIdentifier()
 		{
-			int newPosition = position;
+			int newPosition = _position;
 
-			while (newPosition < s.Length && IsIdentifierLetter(s, position, newPosition))
+			while (newPosition < _s.Length && IsIdentifierLetter(_s, _position, newPosition))
 				newPosition++;
 
-			if (position == newPosition)
+			if (_position == newPosition)
 				return null;
 
-			string content = s.Substring(position, newPosition - position);
+			string content = _s.Substring(_position, newPosition - _position);
 
-			position = newPosition;
+			int oldPosition = _position;
+			_position = newPosition;
+			_columnNumber = oldPosition + 1;
 
-			return new Token
+			var token = new Token
 			{
 				TokenType = TokenType.Identifier,
-				Content = content
+				Content = content,
+				LineNumber = 1,
+				ColumnNumber = _columnNumber,
+				Position = oldPosition + 1
 			};
+
+			_columnNumber += content.Length;
+
+			return token;
 		}
 
 		private static bool IsIdentifierLetter(string s, int position, int newPosition)
@@ -170,37 +226,46 @@ namespace Pogrebnikov.TemplateEngine.LexicalAnalysis
 			return char.IsLetter(s, newPosition) || newPosition > position && char.IsDigit(s, newPosition);
 		}
 
-		private static Token TryTokenizeIf(string s, ref int position)
+		private Token TryTokenizeIf()
 		{
-			return TryTokenize(s, IfTokenContent, ref position, TokenType.BeginIf);
+			return TryTokenize(IfTokenContent, TokenType.BeginIf);
 		}
 
-		private static Token TryTokenizeEndIf(string s, ref int position)
+		private Token TryTokenizeEndIf()
 		{
-			return TryTokenize(s, EndIfTokenContent, ref position, TokenType.EndIf);
+			return TryTokenize(EndIfTokenContent, TokenType.EndIf);
 		}
 
-		private static Token TryTokenizeLoop(string s, ref int position)
+		private Token TryTokenizeLoop()
 		{
-			return TryTokenize(s, LoopTokenContent, ref position, TokenType.BeginLoop);
+			return TryTokenize(LoopTokenContent, TokenType.BeginLoop);
 		}
 
-		private static Token TryTokenizeEndLoop(string s, ref int position)
+		private Token TryTokenizeEndLoop()
 		{
-			return TryTokenize(s, EndLoopTokenContent, ref position, TokenType.EndLoop);
+			return TryTokenize(EndLoopTokenContent, TokenType.EndLoop);
 		}
 
-		private static Token TryTokenize(string s, string tokenContent, ref int position, TokenType tokenType)
+		private Token TryTokenize(string tokenContent, TokenType tokenType)
 		{
-			if (string.Compare(s, position, tokenContent, 0, tokenContent.Length, StringComparison.Ordinal) != 0)
+			if (string.Compare(_s, _position, tokenContent, 0, tokenContent.Length, StringComparison.Ordinal) != 0)
 				return null;
 
-			position += tokenContent.Length;
-			return new Token
+			int oldPosition = _position;
+			_position += tokenContent.Length;
+			_columnNumber = oldPosition + 1;
+
+			var token = new Token
 			{
 				TokenType = tokenType,
-				Content = tokenContent
+				Content = tokenContent,
+				LineNumber = 1,
+				ColumnNumber = _columnNumber,
+				Position = oldPosition + 1
 			};
+
+			_columnNumber += tokenContent.Length;
+			return token;
 		}
 	}
 }
