@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NUnit.Framework;
 using Pogrebnikov.TemplateEngine.LexicalAnalysis;
 
@@ -842,6 +843,18 @@ namespace Pogrebnikov.TemplateEngine.Tests.LexicalAnalysis
 			Assert.AreEqual(3, tokens[1].LineNumber);
 			Assert.AreEqual(1, tokens[1].ColumnNumber);
 			Assert.AreEqual(3, tokens[1].Position);
+		}
+
+		[Test]
+		public void Tokenize_throw_InvalidOperationException_when_double_call()
+		{
+			var tokenizer = new Tokenizer("");
+
+			tokenizer.Tokenize();
+
+			var exception = Assert.Throws<InvalidOperationException>(() => tokenizer.Tokenize());
+
+			Assert.AreEqual("Tokenization is already completed.", exception.Message);
 		}
 	}
 }

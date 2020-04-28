@@ -32,6 +32,9 @@ namespace Pogrebnikov.TemplateEngine.LexicalAnalysis
 
 		internal IEnumerable<Token> Tokenize()
 		{
+			if (_tokens != null)
+				throw new InvalidOperationException("Tokenization is already completed.");
+
 			_tokens = new List<Token>();
 
 			while (_position < _s.Length)
