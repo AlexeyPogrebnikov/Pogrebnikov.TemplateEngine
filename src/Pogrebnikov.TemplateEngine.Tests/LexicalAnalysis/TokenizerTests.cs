@@ -848,7 +848,7 @@ namespace Pogrebnikov.TemplateEngine.Tests.LexicalAnalysis
 		[Test]
 		public void Tokenize_throw_InvalidOperationException_when_double_call()
 		{
-			var tokenizer = new Tokenizer("");
+			var tokenizer = new Tokenizer(string.Empty);
 
 			tokenizer.Tokenize();
 

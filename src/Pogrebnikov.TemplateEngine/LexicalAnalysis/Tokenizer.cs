@@ -194,36 +194,6 @@ namespace Pogrebnikov.TemplateEngine.LexicalAnalysis
 			return TryTokenize(CloseTemplateTokenContent, TokenType.CloseTemplate);
 		}
 
-		private Token TryTokenizeIdentifier()
-		{
-			int newPosition = _position;
-
-			while (newPosition < _s.Length && IsIdentifierLetter(_s, _position, newPosition))
-				newPosition++;
-
-			if (_position == newPosition)
-				return null;
-
-			string content = _s.Substring(_position, newPosition - _position);
-
-			int oldPosition = _position;
-			_position = newPosition;
-			_columnNumber = oldPosition + 1;
-
-			var token = new Token
-			{
-				TokenType = TokenType.Identifier,
-				Content = content,
-				LineNumber = 1,
-				ColumnNumber = _columnNumber,
-				Position = oldPosition + 1
-			};
-
-			_columnNumber += content.Length;
-
-			return token;
-		}
-
 		private static bool IsIdentifierLetter(string s, int position, int newPosition)
 		{
 			return char.IsLetter(s, newPosition) || newPosition > position && char.IsDigit(s, newPosition);
@@ -268,6 +238,36 @@ namespace Pogrebnikov.TemplateEngine.LexicalAnalysis
 			};
 
 			_columnNumber += tokenContent.Length;
+			return token;
+		}
+
+		private Token TryTokenizeIdentifier()
+		{
+			int newPosition = _position;
+
+			while (newPosition < _s.Length && IsIdentifierLetter(_s, _position, newPosition))
+				newPosition++;
+
+			if (_position == newPosition)
+				return null;
+
+			string content = _s.Substring(_position, newPosition - _position);
+
+			int oldPosition = _position;
+			_position = newPosition;
+			_columnNumber = oldPosition + 1;
+
+			var token = new Token
+			{
+				TokenType = TokenType.Identifier,
+				Content = content,
+				LineNumber = 1,
+				ColumnNumber = _columnNumber,
+				Position = oldPosition + 1
+			};
+
+			_columnNumber += content.Length;
+
 			return token;
 		}
 	}
