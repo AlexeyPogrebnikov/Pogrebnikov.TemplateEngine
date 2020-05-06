@@ -23,6 +23,13 @@ namespace Pogrebnikov.TemplateEngine.Parsing
 			});
 		}
 
+		internal ConditionTemplateElement AddConditionElement()
+		{
+			var conditionTemplateElement = new ConditionTemplateElement();
+			_elements.Add(conditionTemplateElement);
+			return conditionTemplateElement;
+		}
+
 		internal TemplateModel GetResult()
 		{
 			return new TemplateModel(_elements);

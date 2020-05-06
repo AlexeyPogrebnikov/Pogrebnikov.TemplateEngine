@@ -99,5 +99,37 @@ namespace Pogrebnikov.TemplateEngine.Tests.Parsing
 			var templateElement = (TextTemplateElement) elements[1];
 			Assert.AreEqual("Sql", templateElement.Text);
 		}
+
+		[Test]
+		public void Parse_return_ConditionTemplateElement()
+		{
+			TemplateModel templateModel = _parser.Parse("{{ #if Flag }}{{ /if }}");
+
+			TemplateElement[] elements = templateModel.Elements.ToArray();
+			Assert.AreEqual(1, elements.Length);
+
+			var conditionTemplateElement = (ConditionTemplateElement)elements[0];
+
+			Assert.AreEqual("Flag", conditionTemplateElement.ValueAccess.Name);
+			Assert.IsNull(conditionTemplateElement.ValueAccess.Next);
+		}
+
+		[Test]
+		public void Parse_return_ConditionTemplateElement_for_property_dot_property()
+		{
+			TemplateModel templateModel = _parser.Parse("{{ #if Model.Flag }}{{ /if }}");
+
+			TemplateElement[] elements = templateModel.Elements.ToArray();
+			Assert.AreEqual(1, elements.Length);
+
+			var conditionTemplateElement = (ConditionTemplateElement)elements[0];
+
+			ValueAccess modelValueAccess = conditionTemplateElement.ValueAccess;
+			Assert.AreEqual("Model", modelValueAccess.Name);
+
+			ValueAccess flagValueAccessNext = modelValueAccess.Next;
+			Assert.AreEqual("Flag", flagValueAccessNext.Name);
+			Assert.IsNull(flagValueAccessNext.Next);
+		}
 	}
 }

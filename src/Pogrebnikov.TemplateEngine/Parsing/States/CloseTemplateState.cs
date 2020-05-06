@@ -19,6 +19,9 @@ namespace Pogrebnikov.TemplateEngine.Parsing.States
 				return new TextState(_builder);
 			}
 
+			if (token.TokenType == TokenType.OpenTemplate)
+				return new OpenTemplateState(_builder);
+
 			if (token.TokenType == TokenType.End)
 				return new EndState();
 

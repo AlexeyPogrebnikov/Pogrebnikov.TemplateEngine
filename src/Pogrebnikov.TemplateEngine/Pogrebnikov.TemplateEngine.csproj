@@ -49,6 +49,7 @@
     <Compile Include="LexicalAnalysis\Tokenizer.cs" />
     <Compile Include="LexicalAnalysis\TokenType.cs" />
     <Compile Include="Model.cs" />
+    <Compile Include="Parsing\Elements\ConditionTemplateElement.cs" />
     <Compile Include="Parsing\Elements\OutputValueTemplateElement.cs" />
     <Compile Include="Parsing\Elements\PropertyValueAccess.cs" />
     <Compile Include="Parsing\Elements\TemplateElement.cs" />
@@ -56,7 +57,11 @@
     <Compile Include="Parsing\Elements\ValueAccess.cs" />
     <Compile Include="Parsing\Parser.cs" />
     <Compile Include="Parsing\ParsingException.cs" />
+    <Compile Include="Parsing\States\BeginIfIdentifierDotState.cs" />
+    <Compile Include="Parsing\States\BeginIfIdentifierState.cs" />
+    <Compile Include="Parsing\States\BeginIfState.cs" />
     <Compile Include="Parsing\States\CloseTemplateState.cs" />
+    <Compile Include="Parsing\States\EndIfState.cs" />
     <Compile Include="Parsing\States\EndState.cs" />
     <Compile Include="Parsing\States\IdentifierDotState.cs" />
     <Compile Include="Parsing\States\IdentifierState.cs" />
