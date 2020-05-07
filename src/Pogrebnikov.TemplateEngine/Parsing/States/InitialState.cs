@@ -15,7 +15,7 @@ namespace Pogrebnikov.TemplateEngine.Parsing.States
 		{
 			if (token.TokenType == TokenType.Text)
 			{
-				_builder.AddTextElement(token.Content);
+				_builder.AddText(token.Content);
 				return new TextState(_builder);
 			}
 

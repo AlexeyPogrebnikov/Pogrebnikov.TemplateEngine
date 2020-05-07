@@ -1,5 +1,4 @@
-﻿using System;
-using Pogrebnikov.TemplateEngine.Evaluating;
+﻿using Pogrebnikov.TemplateEngine.Evaluating;
 
 namespace Pogrebnikov.TemplateEngine.Parsing.Elements
 {

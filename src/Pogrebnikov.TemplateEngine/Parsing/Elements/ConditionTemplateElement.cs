@@ -2,13 +2,13 @@
 
 namespace Pogrebnikov.TemplateEngine.Parsing.Elements
 {
-	internal class ConditionTemplateElement : TemplateElement
+	internal class ConditionTemplateElement : BlockTemplateElement
 	{
 		internal ValueAccess ValueAccess { get; set; }
 
 		internal override void Accept(TemplateEvaluator evaluator)
 		{
-			throw new System.NotImplementedException();
+			evaluator.EvalCondition(this);
 		}
 	}
 }

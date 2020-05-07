@@ -22,7 +22,7 @@ namespace Pogrebnikov.TemplateEngine.Parsing.States
 
 			if (token.TokenType == TokenType.BeginIf)
 			{
-				ConditionTemplateElement conditionTemplateElement = _builder.AddConditionElement();
+				ConditionTemplateElement conditionTemplateElement = _builder.BeginCondition();
 				return new BeginIfState(conditionTemplateElement, _builder);
 			}
 

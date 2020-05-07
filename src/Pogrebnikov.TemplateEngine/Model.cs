@@ -2,27 +2,30 @@
 
 namespace Pogrebnikov.TemplateEngine
 {
+	/// <summary>
+	/// The wrapper for a data.
+	/// </summary>
 	public class Model
 	{
-		private readonly object _obj;
+		private readonly object _source;
 
-		public Model(object obj)
+		public Model(object source)
 		{
-			_obj = obj;
+			_source = source;
 		}
 
 		internal object GetValue(ValueAccess valueAccess)
 		{
 			ValueAccess currentValueAccess = valueAccess;
-			object currentObject = _obj;
+			object value = _source;
 
 			do
 			{
-				currentObject = currentObject.GetType().GetProperty(currentValueAccess.Name).GetValue(currentObject);
+				value = value.GetType().GetProperty(currentValueAccess.Name).GetValue(value);
 				currentValueAccess = currentValueAccess.Next;
 			} while (currentValueAccess != null);
 
-			return currentObject;
+			return value;
 		}
 	}
 }

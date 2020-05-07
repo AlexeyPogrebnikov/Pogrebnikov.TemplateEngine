@@ -19,7 +19,7 @@ namespace Pogrebnikov.TemplateEngine.Tests.Parsing
 		[Test]
 		public void AddTextElement_GetResult_templateModel_constains_TextTemplateElement()
 		{
-			_builder.AddTextElement("123");
+			_builder.AddText("123");
 
 			TemplateModel templateModel = _builder.GetResult();
 
@@ -34,7 +34,7 @@ namespace Pogrebnikov.TemplateEngine.Tests.Parsing
 		{
 			var property = new PropertyValueAccess { Name = "Count" };
 
-			_builder.AddOutputValueElement(property);
+			_builder.AddOutputValue(property);
 
 			TemplateModel templateModel = _builder.GetResult();
 

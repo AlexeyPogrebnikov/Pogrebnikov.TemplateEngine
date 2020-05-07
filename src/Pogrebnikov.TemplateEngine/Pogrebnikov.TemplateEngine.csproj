@@ -49,6 +49,7 @@
     <Compile Include="LexicalAnalysis\Tokenizer.cs" />
     <Compile Include="LexicalAnalysis\TokenType.cs" />
     <Compile Include="Model.cs" />
+    <Compile Include="Parsing\Elements\BlockTemplateElement.cs" />
     <Compile Include="Parsing\Elements\ConditionTemplateElement.cs" />
     <Compile Include="Parsing\Elements\OutputValueTemplateElement.cs" />
     <Compile Include="Parsing\Elements\PropertyValueAccess.cs" />

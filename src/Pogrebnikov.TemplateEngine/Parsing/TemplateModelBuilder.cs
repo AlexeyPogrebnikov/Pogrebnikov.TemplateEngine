@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Pogrebnikov.TemplateEngine.Parsing.Elements;
 
 namespace Pogrebnikov.TemplateEngine.Parsing
@@ -6,16 +7,25 @@ namespace Pogrebnikov.TemplateEngine.Parsing
 	internal class TemplateModelBuilder
 	{
 		private readonly IList<TemplateElement> _elements = new List<TemplateElement>();
+		private readonly Stack<BlockTemplateElement> _blocks = new Stack<BlockTemplateElement>();
 
-		internal void AddTextElement(string text)
+		internal void AddText(string text)
 		{
-			_elements.Add(new TextTemplateElement
+			var textTemplateElement = new TextTemplateElement
 			{
 				Text = text
-			});
+			};
+
+			if (_blocks.Any())
+			{
+				_blocks.Peek().AddInner(textTemplateElement);
+				return;
+			}
+
+			_elements.Add(textTemplateElement);
 		}
 
-		internal void AddOutputValueElement(ValueAccess valueAccess)
+		internal void AddOutputValue(ValueAccess valueAccess)
 		{
 			_elements.Add(new OutputValueTemplateElement
 			{
@@ -23,11 +33,17 @@ namespace Pogrebnikov.TemplateEngine.Parsing
 			});
 		}
 
-		internal ConditionTemplateElement AddConditionElement()
+		internal ConditionTemplateElement BeginCondition()
 		{
 			var conditionTemplateElement = new ConditionTemplateElement();
 			_elements.Add(conditionTemplateElement);
+			_blocks.Push(conditionTemplateElement);
 			return conditionTemplateElement;
+		}
+
+		public void EndCondition()
+		{
+			_blocks.Pop();
 		}
 
 		internal TemplateModel GetResult()

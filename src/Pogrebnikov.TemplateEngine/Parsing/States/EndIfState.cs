@@ -14,7 +14,10 @@ namespace Pogrebnikov.TemplateEngine.Parsing.States
 		public IState Next(Token token)
 		{
 			if (token.TokenType == TokenType.CloseTemplate)
+			{
+				_builder.EndCondition();
 				return new CloseTemplateState(_builder);
+			}
 
 			throw new ParsingException(this, token);
 		}

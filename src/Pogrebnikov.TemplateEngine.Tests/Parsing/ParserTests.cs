@@ -108,7 +108,7 @@ namespace Pogrebnikov.TemplateEngine.Tests.Parsing
 			TemplateElement[] elements = templateModel.Elements.ToArray();
 			Assert.AreEqual(1, elements.Length);
 
-			var conditionTemplateElement = (ConditionTemplateElement)elements[0];
+			var conditionTemplateElement = (ConditionTemplateElement) elements[0];
 
 			Assert.AreEqual("Flag", conditionTemplateElement.ValueAccess.Name);
 			Assert.IsNull(conditionTemplateElement.ValueAccess.Next);
@@ -122,7 +122,7 @@ namespace Pogrebnikov.TemplateEngine.Tests.Parsing
 			TemplateElement[] elements = templateModel.Elements.ToArray();
 			Assert.AreEqual(1, elements.Length);
 
-			var conditionTemplateElement = (ConditionTemplateElement)elements[0];
+			var conditionTemplateElement = (ConditionTemplateElement) elements[0];
 
 			ValueAccess modelValueAccess = conditionTemplateElement.ValueAccess;
 			Assert.AreEqual("Model", modelValueAccess.Name);
@@ -130,6 +130,46 @@ namespace Pogrebnikov.TemplateEngine.Tests.Parsing
 			ValueAccess flagValueAccessNext = modelValueAccess.Next;
 			Assert.AreEqual("Flag", flagValueAccessNext.Name);
 			Assert.IsNull(flagValueAccessNext.Next);
+		}
+
+		[Test]
+		public void Parse_return_ConditionTemplateElement_with_inner()
+		{
+			TemplateModel templateModel = _parser.Parse("{{ #if IsValid }}Valid{{ /if }}");
+
+			TemplateElement[] elements = templateModel.Elements.ToArray();
+			Assert.AreEqual(1, elements.Length);
+
+			var conditionTemplateElement = (ConditionTemplateElement) elements[0];
+
+			Assert.AreEqual("IsValid", conditionTemplateElement.ValueAccess.Name);
+			Assert.IsNull(conditionTemplateElement.ValueAccess.Next);
+
+			TemplateElement[] inner = conditionTemplateElement.Inner.ToArray();
+			Assert.AreEqual(1, inner.Length);
+			Assert.IsInstanceOf<TextTemplateElement>(inner[0]);
+			var textElement = (TextTemplateElement) inner[0];
+			Assert.AreEqual("Valid", textElement.Text);
+		}
+
+		[Test]
+		public void Parse_return_ConditionTemplateElement_and_TextTemplateElement()
+		{
+			TemplateModel templateModel = _parser.Parse("{{ #if IsValid }}{{ /if }}Some text");
+
+			TemplateElement[] elements = templateModel.Elements.ToArray();
+			Assert.AreEqual(2, elements.Length);
+
+			var conditionTemplateElement = (ConditionTemplateElement) elements[0];
+
+			Assert.AreEqual("IsValid", conditionTemplateElement.ValueAccess.Name);
+			Assert.IsNull(conditionTemplateElement.ValueAccess.Next);
+
+			TemplateElement[] inner = conditionTemplateElement.Inner.ToArray();
+			Assert.AreEqual(0, inner.Length);
+
+			var textTemplateElement = (TextTemplateElement) elements[1];
+			Assert.AreEqual("Some text", textTemplateElement.Text);
 		}
 	}
 }
