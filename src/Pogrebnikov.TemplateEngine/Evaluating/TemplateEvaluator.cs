@@ -23,7 +23,7 @@ namespace Pogrebnikov.TemplateEngine.Evaluating
 			_result.Append(_model.GetValue(element.ValueAccess));
 		}
 
-		public void EvalCondition(ConditionTemplateElement element)
+		internal void EvalCondition(ConditionTemplateElement element)
 		{
 			var condition = (bool) _model.GetValue(element.ValueAccess);
 			if (condition)

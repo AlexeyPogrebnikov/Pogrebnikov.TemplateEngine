@@ -8,7 +8,7 @@ namespace Pogrebnikov.TemplateEngine.Parsing.States
 		private readonly ConditionTemplateElement _conditionTemplateElement;
 		private readonly TemplateModelBuilder _builder;
 
-		public BeginIfState(ConditionTemplateElement conditionTemplateElement, TemplateModelBuilder builder)
+		internal BeginIfState(ConditionTemplateElement conditionTemplateElement, TemplateModelBuilder builder)
 		{
 			_conditionTemplateElement = conditionTemplateElement;
 			_builder = builder;

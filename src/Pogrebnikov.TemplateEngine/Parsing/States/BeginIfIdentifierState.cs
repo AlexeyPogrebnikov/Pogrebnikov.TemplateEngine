@@ -8,7 +8,7 @@ namespace Pogrebnikov.TemplateEngine.Parsing.States
 		private readonly ValueAccess _beginValueAccess;
 		private readonly TemplateModelBuilder _builder;
 
-		public BeginIfIdentifierState(ValueAccess beginValueAccess, TemplateModelBuilder builder)
+		internal BeginIfIdentifierState(ValueAccess beginValueAccess, TemplateModelBuilder builder)
 		{
 			_beginValueAccess = beginValueAccess;
 			_builder = builder;

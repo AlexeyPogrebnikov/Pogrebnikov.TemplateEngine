@@ -41,7 +41,7 @@ namespace Pogrebnikov.TemplateEngine.Parsing
 			return conditionTemplateElement;
 		}
 
-		public void EndCondition()
+		internal void EndCondition()
 		{
 			_blocks.Pop();
 		}
@@ -49,6 +49,14 @@ namespace Pogrebnikov.TemplateEngine.Parsing
 		internal TemplateModel GetResult()
 		{
 			return new TemplateModel(_elements);
+		}
+
+		internal void AddMethod(string name)
+		{
+			_elements.Add(new MethodCallTemplateElement
+			{
+				MethodName = name
+			});
 		}
 	}
 }

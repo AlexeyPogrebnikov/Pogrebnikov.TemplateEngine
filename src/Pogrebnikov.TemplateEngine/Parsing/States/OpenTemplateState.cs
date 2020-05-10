@@ -16,8 +16,7 @@ namespace Pogrebnikov.TemplateEngine.Parsing.States
 		{
 			if (token.TokenType == TokenType.Identifier)
 			{
-				var valueAccess = new PropertyValueAccess { Name = token.Content };
-				return new IdentifierState(valueAccess, _builder);
+				return new IdentifierState(token.Content, _builder);
 			}
 
 			if (token.TokenType == TokenType.BeginIf)

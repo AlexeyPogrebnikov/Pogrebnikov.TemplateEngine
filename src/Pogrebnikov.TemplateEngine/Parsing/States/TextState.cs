@@ -6,7 +6,7 @@ namespace Pogrebnikov.TemplateEngine.Parsing.States
 	{
 		private readonly TemplateModelBuilder _builder;
 
-		public TextState(TemplateModelBuilder builder)
+		internal TextState(TemplateModelBuilder builder)
 		{
 			_builder = builder;
 		}

@@ -3,12 +3,12 @@ using Pogrebnikov.TemplateEngine.Parsing.Elements;
 
 namespace Pogrebnikov.TemplateEngine.Parsing.States
 {
-	internal class BeginIfIdentifierDotState : IState
+	internal class IdentifierDotIdentifierState : IState
 	{
 		private readonly ValueAccess _valueAccess;
 		private readonly TemplateModelBuilder _builder;
 
-		internal BeginIfIdentifierDotState(ValueAccess valueAccess, TemplateModelBuilder builder)
+		internal IdentifierDotIdentifierState(ValueAccess valueAccess, TemplateModelBuilder builder)
 		{
 			_valueAccess = valueAccess;
 			_builder = builder;
@@ -16,14 +16,10 @@ namespace Pogrebnikov.TemplateEngine.Parsing.States
 
 		public IState Next(Token token)
 		{
-			if (token.TokenType == TokenType.Identifier)
+			if (token.TokenType == TokenType.CloseTemplate)
 			{
-				_valueAccess.Append(new PropertyValueAccess
-				{
-					Name = token.Content
-				});
-
-				return new BeginIfIdentifierState(_valueAccess, _builder);
+				_builder.AddOutputValue(_valueAccess);
+				return new CloseTemplateState(_builder);
 			}
 
 			throw new ParsingException(this, token);

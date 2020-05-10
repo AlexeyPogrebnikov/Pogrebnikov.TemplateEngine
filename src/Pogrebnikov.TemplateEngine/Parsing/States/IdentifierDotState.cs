@@ -8,7 +8,7 @@ namespace Pogrebnikov.TemplateEngine.Parsing.States
 		private readonly ValueAccess _valueAccess;
 		private readonly TemplateModelBuilder _builder;
 
-		public IdentifierDotState(ValueAccess valueAccess, TemplateModelBuilder builder)
+		internal IdentifierDotState(ValueAccess valueAccess, TemplateModelBuilder builder)
 		{
 			_valueAccess = valueAccess;
 			_builder = builder;
@@ -20,7 +20,7 @@ namespace Pogrebnikov.TemplateEngine.Parsing.States
 			{
 				var endValueAccess = new PropertyValueAccess { Name = token.Content };
 				_valueAccess.Append(endValueAccess);
-				return new IdentifierState(_valueAccess, _builder);
+				return new IdentifierDotIdentifierState(_valueAccess, _builder);
 			}
 
 			throw new ParsingException(this, token);

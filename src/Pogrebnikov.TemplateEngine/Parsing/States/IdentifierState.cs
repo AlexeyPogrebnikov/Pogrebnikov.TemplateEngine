@@ -5,12 +5,12 @@ namespace Pogrebnikov.TemplateEngine.Parsing.States
 {
 	internal class IdentifierState : IState
 	{
-		private readonly ValueAccess _beginValueAccess;
+		private readonly string _identifier;
 		private readonly TemplateModelBuilder _builder;
 
-		public IdentifierState(ValueAccess beginValueAccess, TemplateModelBuilder builder)
+		internal IdentifierState(string identifier, TemplateModelBuilder builder)
 		{
-			_beginValueAccess = beginValueAccess;
+			_identifier = identifier;
 			_builder = builder;
 		}
 
@@ -18,12 +18,25 @@ namespace Pogrebnikov.TemplateEngine.Parsing.States
 		{
 			if (token.TokenType == TokenType.CloseTemplate)
 			{
-				_builder.AddOutputValue(_beginValueAccess);
+				_builder.AddOutputValue(new PropertyValueAccess
+				{
+					Name = _identifier
+				});
 				return new CloseTemplateState(_builder);
 			}
 
 			if (token.TokenType == TokenType.Dot)
-				return new IdentifierDotState(_beginValueAccess, _builder);
+			{
+				var valueAccess = new PropertyValueAccess
+				{
+					Name = _identifier
+				};
+
+				return new IdentifierDotState(valueAccess, _builder);
+			}
+
+			if (token.TokenType == TokenType.LeftParenthesis)
+				return new IdentifierLeftParenthesisState(_identifier, _builder);
 
 			throw new ParsingException(this, token);
 		}

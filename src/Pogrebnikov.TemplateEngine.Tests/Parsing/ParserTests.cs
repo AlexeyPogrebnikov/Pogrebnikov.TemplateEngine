@@ -171,5 +171,18 @@ namespace Pogrebnikov.TemplateEngine.Tests.Parsing
 			var textTemplateElement = (TextTemplateElement) elements[1];
 			Assert.AreEqual("Some text", textTemplateElement.Text);
 		}
+
+		[Test]
+		public void Parse_return_MethodCallTemplateElement()
+		{
+			TemplateModel templateModel = _parser.Parse("{{ Method() }}");
+
+			TemplateElement[] elements = templateModel.Elements.ToArray();
+			Assert.AreEqual(1, elements.Length);
+
+			var methodCallTemplateElement = (MethodCallTemplateElement) elements[0];
+
+			Assert.AreEqual("Method", methodCallTemplateElement.MethodName);
+		}
 	}
 }

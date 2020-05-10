@@ -2,11 +2,11 @@
 
 namespace Pogrebnikov.TemplateEngine.Parsing.States
 {
-	internal class EndIfState : IState
+	internal class IdentifierLeftParenthesisRightParenthesisState : IState
 	{
 		private readonly TemplateModelBuilder _builder;
 
-		internal EndIfState(TemplateModelBuilder builder)
+		internal IdentifierLeftParenthesisRightParenthesisState(TemplateModelBuilder builder)
 		{
 			_builder = builder;
 		}
@@ -14,10 +14,7 @@ namespace Pogrebnikov.TemplateEngine.Parsing.States
 		public IState Next(Token token)
 		{
 			if (token.TokenType == TokenType.CloseTemplate)
-			{
-				_builder.EndCondition();
 				return new CloseTemplateState(_builder);
-			}
 
 			throw new ParsingException(this, token);
 		}
