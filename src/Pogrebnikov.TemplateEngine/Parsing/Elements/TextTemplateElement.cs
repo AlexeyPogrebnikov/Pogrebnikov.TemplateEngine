@@ -4,7 +4,12 @@ namespace Pogrebnikov.TemplateEngine.Parsing.Elements
 {
 	internal class TextTemplateElement : TemplateElement
 	{
-		internal string Text { get; set; }
+		public TextTemplateElement(string text)
+		{
+			Text = text;
+		}
+
+		internal string Text { get; }
 
 		internal override void Accept(TemplateEvaluator evaluator)
 		{

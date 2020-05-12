@@ -25,7 +25,7 @@ namespace Pogrebnikov.TemplateEngine.Tests.Evaluating
 			var model = new Model(null);
 			var templateEvaluator = new TemplateEvaluator(model);
 
-			var element = new TextTemplateElement { Text = "123" };
+			var element = new TextTemplateElement("123");
 
 			templateEvaluator.EvalText(element);
 

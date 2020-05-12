@@ -192,7 +192,7 @@ namespace Pogrebnikov.TemplateEngine.Tests.Parsing
 
 			TemplateElement[] elements = templateModel.Elements.ToArray();
 			Assert.AreEqual(1, elements.Length);
-			var element = (OutputValueTemplateElement)elements[0];
+			var element = (OutputValueTemplateElement) elements[0];
 
 			ValueAccess firstValueAccess = element.ValueAccess;
 			Assert.AreEqual("First", firstValueAccess.Name);

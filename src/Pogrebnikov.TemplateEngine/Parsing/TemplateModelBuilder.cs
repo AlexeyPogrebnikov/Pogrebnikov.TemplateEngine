@@ -11,10 +11,7 @@ namespace Pogrebnikov.TemplateEngine.Parsing
 
 		internal void AddText(string text)
 		{
-			var textTemplateElement = new TextTemplateElement
-			{
-				Text = text
-			};
+			var textTemplateElement = new TextTemplateElement(text);
 
 			if (_blocks.Any())
 			{
