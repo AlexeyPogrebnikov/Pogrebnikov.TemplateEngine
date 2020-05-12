@@ -184,5 +184,26 @@ namespace Pogrebnikov.TemplateEngine.Tests.Parsing
 
 			Assert.AreEqual("Method", methodCallTemplateElement.MethodName);
 		}
+
+		[Test]
+		public void Parse_return_OutputValueTemplateElement_for_property_dot_property_dot_property()
+		{
+			TemplateModel templateModel = _parser.Parse("{{ First.Second.Third }}");
+
+			TemplateElement[] elements = templateModel.Elements.ToArray();
+			Assert.AreEqual(1, elements.Length);
+			var element = (OutputValueTemplateElement)elements[0];
+
+			ValueAccess firstValueAccess = element.ValueAccess;
+			Assert.AreEqual("First", firstValueAccess.Name);
+
+			ValueAccess secondValueAccess = firstValueAccess.Next;
+			Assert.AreEqual("Second", secondValueAccess.Name);
+
+			ValueAccess thirdValueAccess = secondValueAccess.Next;
+			Assert.AreEqual("Third", thirdValueAccess.Name);
+
+			Assert.IsNull(thirdValueAccess.Next);
+		}
 	}
 }

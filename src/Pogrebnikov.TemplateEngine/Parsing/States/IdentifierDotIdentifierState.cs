@@ -22,6 +22,9 @@ namespace Pogrebnikov.TemplateEngine.Parsing.States
 				return new CloseTemplateState(_builder);
 			}
 
+			if (token.TokenType == TokenType.Dot)
+				return new IdentifierDotState(_valueAccess, _builder);
+
 			throw new ParsingException(this, token);
 		}
 	}
