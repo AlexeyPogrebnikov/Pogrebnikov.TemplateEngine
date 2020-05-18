@@ -54,5 +54,54 @@ namespace Pogrebnikov.TemplateEngine.Tests.Evaluating
 
 			Assert.AreEqual("5", result);
 		}
+
+		private class ModelWithMethod : Model
+		{
+			private readonly string _text;
+
+			internal ModelWithMethod(object source, string text) : base(source)
+			{
+				_text = text;
+			}
+
+			public string GetText()
+			{
+				return _text;
+			}
+		}
+
+		[Test]
+		public void EvalMethod_GetResult_return_result_of_method()
+		{
+			var model = new ModelWithMethod(null, "123");
+
+			var evaluator = new TemplateEvaluator(model);
+
+			var element = new MethodCallTemplateElement
+			{
+				MethodName = "GetText"
+			};
+
+			evaluator.EvalMethod(element);
+
+			Assert.AreEqual("123", evaluator.GetResult());
+		}
+
+		[Test]
+		public void EvalMethod_throw_TemplateEvaluateException_if_method_does_not_exist()
+		{
+			var model = new Model(null);
+
+			var evaluator = new TemplateEvaluator(model);
+
+			var element = new MethodCallTemplateElement
+			{
+				MethodName = "SomeMethod"
+			};
+
+			var exception = Assert.Throws<TemplateEvaluateException>(() => evaluator.EvalMethod(element));
+
+			Assert.AreEqual("Method with name 'SomeMethod' does not exist in model.", exception.Message);
+		}
 	}
 }

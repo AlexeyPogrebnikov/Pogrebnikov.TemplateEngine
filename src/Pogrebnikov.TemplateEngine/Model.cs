@@ -7,6 +7,7 @@ namespace Pogrebnikov.TemplateEngine
 	/// </summary>
 	public class Model
 	{
+		//TODO to property Data
 		private readonly object _source;
 
 		public Model(object source)
@@ -14,6 +15,7 @@ namespace Pogrebnikov.TemplateEngine
 			_source = source;
 		}
 
+		//TODO move to TemplateEvaluator
 		internal object GetValue(ValueAccess valueAccess)
 		{
 			ValueAccess currentValueAccess = valueAccess;

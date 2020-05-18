@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Engine.cs" />
+    <Compile Include="Evaluating\TemplateEvaluateException.cs" />
     <Compile Include="Evaluating\TemplateEvaluator.cs" />
     <Compile Include="LexicalAnalysis\Token.cs" />
     <Compile Include="LexicalAnalysis\TokenizationException.cs" />
